@@ -68,7 +68,7 @@ function App() {
   }
 
   return (
-    <div className="container py-4">
+  <div className="app-root container py-4">
       <header className="mb-4">
         <h1 className="h3">Centro de preguntas</h1>
         <p className="text-muted">Envía una pregunta y la entidad podrá responderla.</p>

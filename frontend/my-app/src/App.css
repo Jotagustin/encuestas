@@ -28,10 +28,9 @@ header{margin-bottom:18px}
 header h1{margin:0;font-weight:600;font-size:20px;text-align:center}
 header p{margin:6px 0 0;color:var(--muted);font-size:13px;text-align:center}
 
-main{
-  display:flex;
-  justify-content:center; /* centra las dos tarjetas dentro del contenedor */
-  gap:20px;
+/* Dejar que Bootstrap gestione el layout; evitar reglas globales sobre <main> que rompen la grid */
+.app-root main { /* opcional: añadir separación entre columnas */
+  gap: 20px;
 }
 
 .left,.right{
