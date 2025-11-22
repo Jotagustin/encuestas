@@ -5,11 +5,70 @@ import TicketForm from './TicketForm'
 import TicketList from './TicketList'
 import ResponsesPanel from './ResponsesPanel'
 
+function EditModal({ pregunta, onClose, onSave }) {
+  const [form, setForm] = useState({ ...pregunta })
+  const [guardando, setGuardando] = useState(false)
+
+  function handleChange(e) {
+    const { name, value } = e.target
+    setForm(f => ({ ...f, [name]: value }))
+  }
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setGuardando(true)
+    await onSave(form.id, form)
+    setGuardando(false)
+    onClose()
+  }
+
+  if (!pregunta) return null
+  return (
+    <div className="modal-editar-bg">
+      <div className="modal-editar">
+        <h3 className="mb-3">Editar registro</h3>
+        <form onSubmit={handleSave}>
+          <div className="mb-2">
+            <label className="form-label">Nombre</label>
+            <input name="usuario" className="form-control" value={form.usuario || ''} onChange={handleChange} />
+          </div>
+          <div className="mb-2">
+            <label className="form-label">Empresa</label>
+            <input name="empresa" className="form-control" value={form.empresa || ''} onChange={handleChange} />
+          </div>
+          <div className="mb-2">
+            <label className="form-label">Categoría</label>
+            <select name="categoria" className="form-select" value={form.categoria || ''} onChange={handleChange}>
+              <option value="general">General</option>
+              <option value="soporte">Soporte</option>
+              <option value="facturacion">Facturación</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="form-label">Pregunta</label>
+            <textarea name="pregunta" className="form-control" value={form.pregunta || ''} onChange={handleChange} />
+          </div>
+          <div className="mb-2">
+            <label className="form-label">Respuesta</label>
+            <textarea name="respuesta" className="form-control" value={form.respuesta || ''} onChange={handleChange} />
+          </div>
+          <div className="d-flex gap-2 mt-3">
+            <button type="submit" className="btn btn-primary" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar'}</button>
+            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [preguntas, setPreguntas] = useState([])
   const [seleccionada, setSeleccionada] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
+  const [editando, setEditando] = useState(false)
+  const [preguntaEditar, setPreguntaEditar] = useState(null)
 
 
   useEffect(() => {
@@ -55,6 +114,22 @@ function App() {
 
   function seleccionarPregunta(pregunta) {
     setSeleccionada(pregunta)
+    setPreguntaEditar(pregunta)
+    setEditando(true)
+  }
+
+  async function manejarGuardarEdicion(id, datos) {
+    try {
+      const actualizada = await actualizarPregunta(id, datos)
+      setPreguntas(preguntas.map(p => p.id === id ? actualizada : p))
+      setSeleccionada(actualizada)
+      setPreguntaEditar(null)
+      setEditando(false)
+      return { ok: true }
+    } catch (err) {
+      console.error('Error al guardar edición:', err)
+      return { ok: false, error: err.message }
+    }
   }
 
   return (
@@ -115,6 +190,14 @@ function App() {
           </div>
         </div>
 
+        {editando && (
+          <EditModal 
+            pregunta={preguntaEditar} 
+            onClose={() => { setEditando(false); setPreguntaEditar(null); }} 
+            onSave={manejarGuardarEdicion} 
+          />
+        )}
+
         <footer className="text-center mt-4 mb-3">
           <small className="text-muted">Sistema de preguntas y respuestas</small>
         </footer>
@@ -124,3 +207,24 @@ function App() {
 }
 
 export default App
+
+// Estilos para el modal (puedes moverlos a App.css)
+/*
+.modal-editar-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-editar {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 340px;
+  max-width: 95vw;
+}
+*/
