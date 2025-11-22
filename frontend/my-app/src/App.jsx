@@ -48,10 +48,7 @@ function EditModal({ pregunta, onClose, onSave }) {
             <label className="form-label">Pregunta</label>
             <textarea name="pregunta" className="form-control" value={form.pregunta || ''} onChange={handleChange} />
           </div>
-          <div className="mb-2">
-            <label className="form-label">Respuesta</label>
-            <textarea name="respuesta" className="form-control" value={form.respuesta || ''} onChange={handleChange} />
-          </div>
+          {/* Se ha quitado el campo de respuesta para que no se pueda modificar aquí */}
           <div className="d-flex gap-2 mt-3">
             <button type="submit" className="btn btn-primary" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar'}</button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
@@ -142,7 +139,6 @@ function App() {
           <p className="text-muted">Envía una pregunta y la entidad podrá responderla</p>
         </header>
 
-        {/* Formulario arriba centrado */}
         <div className="row justify-content-center mb-4">
           <div className="col-12 col-lg-8 col-xl-6">
             <div className="card shadow-sm">
@@ -201,7 +197,6 @@ function App() {
         )}
 
         <footer className="text-center mt-4 mb-3">
-          <small className="text-muted">Sistema de preguntas y respuestas</small>
         </footer>
       </div>
     </div>
@@ -210,23 +205,3 @@ function App() {
 
 export default App
 
-// Estilos para el modal (puedes moverlos a App.css)
-/*
-.modal-editar-bg {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-editar {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 14px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  min-width: 340px;
-  max-width: 95vw;
-}
-*/
