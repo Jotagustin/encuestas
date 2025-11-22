@@ -20,6 +20,13 @@ class PreguntaGetPost(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class PreguntaGetPutDelete(APIView):
+    def delete(self, request, id):
+        try:
+            pre = Pregunta.objects.get(id=id)
+        except Pregunta.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        pre.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
     def get(self, request, id):
         try:
@@ -33,23 +40,32 @@ class PreguntaGetPutDelete(APIView):
     def put(self, request, id):
         try:
             pre = Pregunta.objects.get(id=id)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        ser = PreguntaSerializer(pre, data=request.data)
+        except Pregunta.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        ser = PreguntaSerializer(pre, data=request.data, partial=True)
         if ser.is_valid():
             ser.save()
-            return Response(ser.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, id):
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PreguntaUpdate(APIView):
+    def put(self, request, pk):
         try:
-            pre = Pregunta.objects.get(id=id)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        pre.delete()
-        return Response(status=status.HTTP_200_OK)
+            pregunta = Pregunta.objects.get(pk=pk)
+        except Pregunta.DoesNotExist:
+            return Response({"error": "Pregunta no encontrada"}, status=404)
+
+        respuesta_texto = request.data.get("respuesta", "")
+
+        pregunta.respuesta = respuesta_texto
+        pregunta.save()
+
+
+        serializer = PreguntaSerializer(pregunta)
+        return Response(serializer.data, status=200)
+
+
 
 def index(request):
     return render(request, 'index.html')

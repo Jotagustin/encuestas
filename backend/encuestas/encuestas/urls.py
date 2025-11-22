@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from encuenta.views import PreguntaGetPost, PreguntaGetPutDelete, index
+
+from encuenta.views import PreguntaGetPost, PreguntaGetPutDelete, PreguntaUpdate, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('api/tickets/', PreguntaGetPost.as_view(), name='pregunta-list-create'),
     path('api/tickets/<int:id>/', PreguntaGetPutDelete.as_view(), name='pregunta-detail'),
+    path('preguntas/<int:pk>/update/', PreguntaUpdate.as_view(), name='pregunta-update'),
 ]

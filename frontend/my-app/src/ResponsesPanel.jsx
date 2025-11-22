@@ -69,6 +69,60 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
     )
   }
 
+  return (
+    <div>
+      <div className="mb-3 p-3 bg-light rounded">
+        <div className="fw-bold mb-2">Pregunta:</div>
+        <div className="mb-2">{pregunta.pregunta}</div>
+        <div className="small text-muted">
+          Por: {pregunta.usuario}
+          {pregunta.empresa && ` (${pregunta.empresa})`}
+        </div>
+      </div>
+      {!editando && pregunta.respuesta ? (
+        <div>
+          <div className="mb-3">
+            <div className="fw-bold mb-2">Respuesta:</div>
+            <div className="p-3 bg-light rounded">{pregunta.respuesta}</div>
+          </div>
+          <button 
+            className="btn btn-outline-primary btn-sm" 
+            onClick={() => setEditando(true)}
+          >
+            Modificar Respuesta
+          </button>
+        </div>
+      ) : (
+        <div>
+          <label className="form-label fw-bold">Respuesta:</label>
+          <textarea
+            className="form-control mb-2"
+            value={respuesta}
+            onChange={(e) => setRespuesta(e.target.value)}
+            placeholder="Escribe la respuesta aquí..."
+            rows="5"
+          />
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-primary"
+              onClick={guardar}
+              disabled={guardando}
+            >
+              {guardando ? 'Guardando.' : 'Guardar Respuesta'}
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={cancelar}
+              disabled={guardando}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
 
   return (
     <div>

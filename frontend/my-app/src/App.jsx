@@ -97,15 +97,33 @@ function App() {
     }
   }
 
-  async function manejarGuardarRespuesta(id, datos) {
+  // GUARDAR RESPUESTA EN DJANGO
+  async function manejarGuardarRespuesta(id, data) {
     try {
-      const actualizada = await actualizarPregunta(id, datos)
+      const resp = await fetch(`http://localhost:8000/preguntas/${id}/update/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          respuesta: data.respuesta
+        })
+      })
+
+      if (!resp.ok) {
+        return { ok: false }
+      }
+
+      // Actualizar lista después de guardar
+      const actualizada = await resp.json()
+
       setPreguntas(preguntas.map(p => p.id === id ? actualizada : p))
       setSeleccionada(actualizada)
+
       return { ok: true }
     } catch (err) {
-      console.error('Error al guardar respuesta:', err)
-      return { ok: false, error: err.message }
+      console.error("Error al guardar respuesta:", err)
+      return { ok: false }
     }
   }
 
@@ -150,16 +168,19 @@ function App() {
           </div>
         </div>
 
-
+        {/* Sección inferior */}
         <div className="row g-4">
+
+          {/* Panel de respuesta */}
           <div className="col-12 col-lg-6">
             <div className="card shadow-sm h-100">
               <div className="card-body">
                 <h2 className="h5 mb-3">Respuesta</h2>
+
                 {seleccionada ? (
                   <ResponsesPanel 
-                    pregunta={seleccionada} 
-                    onGuardar={manejarGuardarRespuesta} 
+                    pregunta={seleccionada}
+                    onGuardar={manejarGuardarRespuesta}
                   />
                 ) : (
                   <p className="text-muted">
@@ -176,15 +197,16 @@ function App() {
             <div className="card shadow-sm h-100">
               <div className="card-body">
                 <h2 className="h5 mb-3">Preguntas Recientes</h2>
+
                 {cargando ? (
                   <p className="text-muted">Cargando...</p>
                 ) : error ? (
                   <div className="alert alert-danger">{error}</div>
                 ) : (
                   <TicketList 
-                    preguntas={preguntas} 
+                    preguntas={preguntas}
                     seleccionada={seleccionada}
-                    onSeleccionar={seleccionarPregunta} 
+                    onSeleccionar={seleccionarPregunta}
                   />
                 )}
               </div>
