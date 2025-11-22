@@ -3,6 +3,16 @@ from django.db import models
 from django.utils import timezone
 
 
+def hoy():
+    """Devuelve la fecha local actual (date), usable como default en DateField."""
+    return timezone.localdate()
+
+
+def ahora():
+    """Devuelve la hora local actual (time), usable como default en TimeField."""
+    return timezone.localtime().time()
+
+
 class Pregunta(models.Model):
 
     ESTADO_ABIERTO = 'abierto'
@@ -29,9 +39,9 @@ class Pregunta(models.Model):
     comentario = models.TextField('comentario', blank=True, null=True)
     categoria = models.CharField('categoria', max_length=50, choices=CATEGORIAS, default='general')
 
-    # Fecha y hora por separado (como pediste)
-    fecha = models.DateField('fecha', default=timezone.now)
-    hora = models.TimeField('hora', default=timezone.now)
+
+    fecha = models.DateField('fecha', default=hoy)
+    hora = models.TimeField('hora', default=ahora)
 
     estado = models.CharField('estado', max_length=20, choices=ESTADOS, default=ESTADO_ABIERTO)
     created_at = models.DateTimeField('creado', auto_now_add=True)
