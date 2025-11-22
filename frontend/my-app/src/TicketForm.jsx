@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 export default function TicketForm({ onCrear }) {
   const [formulario, setFormulario] = useState({
-    usuario: '',
-    empresa: '',
-    categoria: 'General',
-    pregunta: ''
+     usuario: '',
+     empresa: '',
+     categoria: 'general',
+     pregunta: ''
   })
   const [enviando, setEnviando] = useState(false)
 
@@ -73,10 +73,9 @@ export default function TicketForm({ onCrear }) {
           value={formulario.categoria}
           onChange={manejarCambio}
         >
-          <option value="General">General</option>
-          <option value="Soporte">Soporte</option>
-          <option value="Ventas">Ventas</option>
-          <option value="Técnico">Técnico</option>
+            <option value="general">General</option>
+            <option value="soporte">Soporte</option>
+            <option value="facturacion">Facturación</option>
         </select>
       </div>
 
