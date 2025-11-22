@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { obtenerPreguntas, crearPregunta, actualizarPregunta } from './api'
+import { obtenerPreguntas, crearPregunta } from './api'
 import TicketForm from './TicketForm'
 import TicketList from './TicketList'
 import ResponsesPanel from './ResponsesPanel'
@@ -41,15 +41,33 @@ function App() {
     }
   }
 
-  async function manejarGuardarRespuesta(id, datos) {
+  // GUARDAR RESPUESTA EN DJANGO
+  async function manejarGuardarRespuesta(id, data) {
     try {
-      const actualizada = await actualizarPregunta(id, datos)
+      const resp = await fetch(`http://localhost:8000/preguntas/${id}/update/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          respuesta: data.respuesta
+        })
+      })
+
+      if (!resp.ok) {
+        return { ok: false }
+      }
+
+      // Actualizar lista después de guardar
+      const actualizada = await resp.json()
+
       setPreguntas(preguntas.map(p => p.id === id ? actualizada : p))
       setSeleccionada(actualizada)
+
       return { ok: true }
     } catch (err) {
-      console.error('Error al guardar respuesta:', err)
-      return { ok: false, error: err.message }
+      console.error("Error al guardar respuesta:", err)
+      return { ok: false }
     }
   }
 
@@ -65,7 +83,7 @@ function App() {
           <p className="text-muted">Envía una pregunta y la entidad podrá responderla</p>
         </header>
 
-        {/* Formulario arriba centrado */}
+        {/* Formulario arriba */}
         <div className="row justify-content-center mb-4">
           <div className="col-12 col-lg-8 col-xl-6">
             <div className="card shadow-sm">
@@ -77,39 +95,42 @@ function App() {
           </div>
         </div>
 
-        {/* Fila inferior: Respuestas (izquierda) y Preguntas (derecha) */}
+        {/* Sección inferior */}
         <div className="row g-4">
-          {/* Columna IZQUIERDA: Respuestas */}
+
+          {/* Panel de respuesta */}
           <div className="col-12 col-lg-6">
             <div className="card shadow-sm h-100">
               <div className="card-body">
                 <h2 className="h5 mb-3">Respuesta</h2>
+
                 {seleccionada ? (
                   <ResponsesPanel 
-                    pregunta={seleccionada} 
-                    onGuardar={manejarGuardarRespuesta} 
+                    pregunta={seleccionada}
+                    onGuardar={manejarGuardarRespuesta}
                   />
                 ) : (
-                  <p className="text-muted">Selecciona una pregunta para ver/editar su respuesta</p>
+                  <p className="text-muted">Selecciona una pregunta para ver o escribir la respuesta</p>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Columna DERECHA: Preguntas Recientes */}
+          {/* Lista de preguntas */}
           <div className="col-12 col-lg-6">
             <div className="card shadow-sm h-100">
               <div className="card-body">
                 <h2 className="h5 mb-3">Preguntas Recientes</h2>
+
                 {cargando ? (
                   <p className="text-muted">Cargando...</p>
                 ) : error ? (
                   <div className="alert alert-danger">{error}</div>
                 ) : (
                   <TicketList 
-                    preguntas={preguntas} 
+                    preguntas={preguntas}
                     seleccionada={seleccionada}
-                    onSeleccionar={seleccionarPregunta} 
+                    onSeleccionar={seleccionarPregunta}
                   />
                 )}
               </div>

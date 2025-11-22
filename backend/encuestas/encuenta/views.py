@@ -7,6 +7,7 @@ from .serializers import PreguntaSerializer
 from .models import Pregunta
 
 
+
 class PreguntaGetPost(APIView):
 
     def get(self, request):
@@ -33,6 +34,24 @@ class PreguntaGetPutDelete(APIView):
         ser = PreguntaSerializer(pre)
         return Response(ser.data)
 
+
+class PreguntaUpdate(APIView):
+    def put(self, request, pk):
+        try:
+            pregunta = Pregunta.objects.get(pk=pk)
+        except Pregunta.DoesNotExist:
+            return Response({"error": "Pregunta no encontrada"}, status=404)
+
+        # Obtener el texto de respuesta desde React
+        respuesta_texto = request.data.get("respuesta", "")
+
+        # Guardar la respuesta
+        pregunta.respuesta = respuesta_texto
+        pregunta.save()
+
+        # Serializar para devolver a React
+        serializer = PreguntaSerializer(pregunta)
+        return Response(serializer.data, status=200)
 
 
 

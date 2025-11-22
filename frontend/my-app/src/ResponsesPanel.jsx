@@ -38,6 +38,7 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
   return (
     <div>
 
+      {/* Pregunta */}
       <div className="mb-3 p-3 bg-light rounded">
         <div className="fw-bold mb-2">Pregunta:</div>
         <div className="mb-2">{pregunta.pregunta}</div>
@@ -47,14 +48,15 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
         </div>
       </div>
 
-      {/* Área de respuesta */}
+      {/* Respuesta */}
       {!editando && pregunta.respuesta ? (
-        // Modo visualización
+        // Vista normal
         <div>
           <div className="mb-3">
             <div className="fw-bold mb-2">Respuesta:</div>
             <div className="p-3 bg-light rounded">{pregunta.respuesta}</div>
           </div>
+
           <button 
             className="btn btn-outline-primary btn-sm" 
             onClick={() => setEditando(true)}
@@ -73,6 +75,7 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
             placeholder="Escribe la respuesta aquí..."
             rows="5"
           />
+
           <div className="d-flex gap-2">
             <button
               className="btn btn-primary"
@@ -81,6 +84,7 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
             >
               {guardando ? 'Guardando...' : 'Guardar Respuesta'}
             </button>
+
             {pregunta.respuesta && (
               <button
                 className="btn btn-secondary"
