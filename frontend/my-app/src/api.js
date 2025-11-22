@@ -1,13 +1,11 @@
 let API_BASE = '/api'
 try {
-  // En Vite se expone en import.meta.env; usar try/catch para evitar crashes en entornos
-  // donde import.meta no esté disponible (o en scripts no módulos).
+
   if (import.meta && import.meta.env && import.meta.env.VITE_API_BASE) {
     API_BASE = import.meta.env.VITE_API_BASE
   }
 } catch (e) {
-  // fallback silencioso: dejamos '/api'
-  // console.warn('No se pudo leer import.meta.env.VITE_API_BASE, usando /api')
+
 }
 
 export async function obtenerPreguntas() {

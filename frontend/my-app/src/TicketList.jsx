@@ -53,7 +53,7 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
             </button>
 
           </div>
-        </li>
+        </div>
       ))}
     </ul>
   );
