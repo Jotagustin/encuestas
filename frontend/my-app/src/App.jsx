@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { obtenerPreguntas, crearPregunta } from './api'
+import { obtenerPreguntas, crearPregunta, actualizarPregunta } from './api'
 import TicketForm from './TicketForm'
 import TicketList from './TicketList'
 
@@ -41,28 +41,84 @@ function App() {
     }
   }
 
+  async function manejarActualizarPregunta(id, datos) {
+    try {
+      const actualizada = await actualizarPregunta(id, datos)
+      setPreguntas((s) => s.map((p) => (p.id === actualizada.id ? actualizada : p)))
+      return { ok: true, data: actualizada }
+    } catch (e) {
+      console.error(e)
+      return { ok: false, error: e }
+    }
+  }
+
+  const [seleccionada, setSeleccionada] = useState(null)
+
+  function seleccionarPregunta(pregunta) {
+    setSeleccionada(pregunta)
+  }
+
   return (
-    <div className="app-root">
-      <header>
-        <h1>Centro de preguntas</h1>
-        <p>Envía una pregunta y la entidad podrá responderla.</p>
+    <div className="container py-4">
+      <header className="mb-4">
+        <h1 className="h3">Centro de preguntas</h1>
+        <p className="text-muted">Envía una pregunta y la entidad podrá responderla.</p>
       </header>
 
-      <main>
-        <section className="left">
-          <h2>Formulario</h2>
-          <TicketForm onCrear={manejarCrearPregunta} />
+      <main className="row gx-4">
+        {/* columna vacía opcional a la izquierda */}
+        <div className="col-md-1" />
+
+        {/* centro: formulario */}
+        <section className="col-md-5">
+          <div className="card">
+            <div className="card-body">
+              <h2 className="h5">Formulario</h2>
+              <TicketForm onCrear={manejarCrearPregunta} />
+            </div>
+          </div>
         </section>
 
-        <section className="right">
-          <h2>Preguntas recientes</h2>
-          {cargando && <p>Cargando preguntas…</p>}
-          {error && <p className="error">{error}</p>}
-          {!cargando && <TicketList preguntas={preguntas} />}
+        {/* derecha: preguntas y respuestas */}
+        <section className="col-md-6">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="card mb-3">
+                <div className="card-body">
+                  <h2 className="h6">Preguntas recientes</h2>
+                  {cargando && <p>Cargando preguntas…</p>}
+                  {error && <div className="alert alert-danger">{error}</div>}
+                  {!cargando && (
+                    <TicketList preguntas={preguntas} onSeleccionar={seleccionarPregunta} />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <div className="card mb-3">
+                <div className="card-body">
+                  <h2 className="h6">Respuestas</h2>
+                  {/* panel de respuestas: si hay seleccionada, mostrar editor y contenido */}
+                  {seleccionada ? (
+                    <div>
+                      <div className="mb-2">
+                        <strong>{seleccionada.pregunta}</strong>
+                        <div className="text-muted small">{seleccionada.usuario}{seleccionada.empresa ? ` — ${seleccionada.empresa}` : ''}</div>
+                      </div>
+                      <ResponsesPanel pregunta={seleccionada} onGuardar={manejarActualizarPregunta} />
+                    </div>
+                  ) : (
+                    <p className="text-muted">Selecciona una pregunta para ver/editar su respuesta</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
-      <footer>
+      <footer className="mt-4 text-center text-muted">
         <small>Sistema de preguntas y respuestas</small>
       </footer>
     </div>

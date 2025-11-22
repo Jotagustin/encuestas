@@ -35,35 +35,35 @@ export default function TicketForm({ onCrear }) {
 
   return (
     <form onSubmit={handleSubmit} className="ticket-form">
-      <label>
-        Nombre
-        <input value={usuario} onChange={(e) => setUsuario(e.target.value)} required placeholder="Tu nombre" />
-      </label>
+      <div className="mb-3">
+        <label className="form-label">Nombre</label>
+        <input className="form-control" value={usuario} onChange={(e) => setUsuario(e.target.value)} required placeholder="Tu nombre" />
+      </div>
 
-      <label>
-        Empresa (opcional)
-        <input value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Nombre de la empresa" />
-      </label>
+      <div className="mb-3">
+        <label className="form-label">Empresa (opcional)</label>
+        <input className="form-control" value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Nombre de la empresa" />
+      </div>
 
-      <label>
-        Categoría
-        <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+      <div className="mb-3">
+        <label className="form-label">Categoría</label>
+        <select className="form-select" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
           <option value="general">General</option>
           <option value="soporte">Soporte</option>
           <option value="facturacion">Facturación</option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        Pregunta
-        <textarea value={pregunta} onChange={(e) => setPregunta(e.target.value)} required placeholder="Escribe tu pregunta aquí" />
-      </label>
+      <div className="mb-3">
+        <label className="form-label">Pregunta</label>
+        <textarea className="form-control" value={pregunta} onChange={(e) => setPregunta(e.target.value)} required placeholder="Escribe tu pregunta aquí" />
+      </div>
 
-      <div>
-        <button type="submit" disabled={submitting}>
+      <div className="d-flex align-items-center gap-2">
+        <button className="btn btn-primary" type="submit" disabled={submitting}>
           {submitting ? 'Enviando…' : 'Enviar pregunta'}
         </button>
-        {msg && <span className="msg">{msg}</span>}
+        {msg && <div className="text-success small">{msg}</div>}
       </div>
     </form>
   )

@@ -1,4 +1,4 @@
-
+const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 export async function obtenerPreguntas() {
   const res = await fetch(`${API_BASE}/tickets/`)
@@ -19,7 +19,21 @@ export async function crearPregunta(datos) {
   return res.json()
 }
 
+export async function actualizarPregunta(id, datos) {
+  const res = await fetch(`${API_BASE}/tickets/${id}/`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`No se pudo actualizar la pregunta: ${res.status} ${text}`)
+  }
+  return res.json()
+}
+
 export default {
   obtenerPreguntas,
   crearPregunta,
+  actualizarPregunta,
 }

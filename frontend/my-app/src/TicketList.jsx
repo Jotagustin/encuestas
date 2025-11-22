@@ -1,17 +1,19 @@
-export default function TicketList({ preguntas = [] }) {
+import { useState } from 'react'
+
+export default function TicketList({ preguntas = [], onSeleccionar }) {
   if (!preguntas.length) return <p>Aún no hay preguntas.</p>
 
   return (
-    <ul className="ticket-list">
+    <ul className="list-group">
       {preguntas.map((t) => (
-        <li key={t.id || t.codigo || Math.random()} className="ticket-item">
-          <strong>{t.pregunta}</strong>
-          <div className="meta">
-            <span>{t.usuario}</span>
-            {t.empresa && <span> — {t.empresa}</span>}
-            {t.categoria && <span> ({t.categoria})</span>}
+        <li key={t.id || t.codigo || Math.random()} className="list-group-item d-flex justify-content-between align-items-start">
+          <div style={{ cursor: 'pointer' }} onClick={() => onSeleccionar && onSeleccionar(t)}>
+            <div className="fw-bold">{t.pregunta}</div>
+            <div className="small text-muted">{t.usuario}{t.empresa ? ` — ${t.empresa}` : ''}</div>
           </div>
-          {t.respuesta && <div className="respuesta">Respuesta: {t.respuesta}</div>}
+          <div className="text-end">
+            {t.respuesta ? <span className="badge bg-success">Respondida</span> : <span className="badge bg-secondary">Abierta</span>}
+          </div>
         </li>
       ))}
     </ul>
