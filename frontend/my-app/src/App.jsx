@@ -57,6 +57,15 @@ function App() {
   function seleccionarPregunta(pregunta) {
     setSeleccionada(pregunta)
   }
+  
+  // wrapper: actualiza la pregunta en la lista y actualiza la selección
+  async function guardarRespuesta(id, datos) {
+    const res = await manejarActualizarPregunta(id, datos)
+    if (res && res.ok && res.data) {
+      setSeleccionada(res.data)
+    }
+    return res
+  }
 
   return (
     <div className="container py-4">
@@ -82,7 +91,7 @@ function App() {
         {/* derecha: preguntas y respuestas */}
         <section className="col-md-6">
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-8">
               <div className="card mb-3">
                 <div className="card-body">
                   <h2 className="h6">Preguntas recientes</h2>
@@ -95,7 +104,7 @@ function App() {
               </div>
             </div>
 
-            <div className="col-md-6">
+            <div className="col-md-4">
               <div className="card mb-3">
                 <div className="card-body">
                   <h2 className="h6">Respuestas</h2>
@@ -106,7 +115,7 @@ function App() {
                         <strong>{seleccionada.pregunta}</strong>
                         <div className="text-muted small">{seleccionada.usuario}{seleccionada.empresa ? ` — ${seleccionada.empresa}` : ''}</div>
                       </div>
-                      <ResponsesPanel pregunta={seleccionada} onGuardar={manejarActualizarPregunta} />
+                      <ResponsesPanel pregunta={seleccionada} onGuardar={guardarRespuesta} />
                     </div>
                   ) : (
                     <p className="text-muted">Selecciona una pregunta para ver/editar su respuesta</p>
