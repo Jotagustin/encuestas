@@ -1,35 +1,62 @@
-export default function TicketList({ preguntas = [], seleccionada, onSeleccionar }) {
-  if (!preguntas.length) {
-    return <p className="text-muted">No hay preguntas aún</p>
-  }
+import { useState } from 'react';
+
+const API_URL = "http://127.0.0.1:8000/api/tickets/";
+
+export default function TicketList({ preguntas = [], onSeleccionar }) {
+
+  const eliminar = async (id, e) => {
+    e.stopPropagation(); 
+
+    if (!confirm("¿Seguro que deseas eliminar esta respuesta?")) return;
+
+    try {
+      const res = await fetch(`${API_URL}${id}/`, { method: "DELETE" });
+      
+      if (!res.ok) throw new Error("Error al eliminar");
+      
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar");
+    }
+  };
+
+  if (!preguntas.length) return <p>Aún no hay preguntas.</p>;
 
   return (
     <div className="lista-preguntas">
-      {preguntas.map((pregunta) => (
-        <div
-          key={pregunta.id}
-          className={`pregunta-item ${seleccionada?.id === pregunta.id ? 'seleccionada' : ''}`}
-          onClick={() => onSeleccionar(pregunta)}
-        >
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="flex-grow-1">
-              <div className="fw-bold mb-1">{pregunta.pregunta}</div>
-              <div className="small text-muted">
-                {pregunta.usuario}
-                {pregunta.empresa && ` — ${pregunta.empresa}`}
-                {pregunta.categoria && ` • ${pregunta.categoria}`}
-              </div>
+      {preguntas.map((t) => (
+        <div key={t.id} className="pregunta-item d-flex justify-content-between align-items-center">
+          <div style={{ flex: 1 }}>
+            <div className="fw-bold">{t.pregunta}</div>
+            <div className="small text-muted">
+                {t.usuario} {t.empresa ? `— ${t.empresa}` : ''}
             </div>
-            <div className="ms-2">
-              {pregunta.respuesta ? (
-                <span className="badge bg-success">Respondida</span>
-              ) : (
-                <span className="badge bg-warning text-dark">Pendiente</span>
-              )}
+          </div>
+
+          <div className="d-flex align-items-center gap-2">
+            <div className="me-2">
+              {t.respuesta ? 
+                <span className="badge bg-success">Respondida</span> : 
+                <span className="badge bg-secondary">Abierta</span>
+              }
             </div>
+            <button
+              className="btn btn-sm btn-warning"
+              onClick={(e) => { e.stopPropagation(); onSeleccionar && onSeleccionar(t, true); }}
+            >
+              Editar
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={(e) => eliminar(t.id, e)}
+            >
+              Eliminar
+            </button>
           </div>
         </div>
       ))}
     </div>
-  )
+  );
 }

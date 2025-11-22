@@ -29,7 +29,7 @@ export async function crearPregunta(datos) {
 
 export async function actualizarPregunta(id, datos) {
   const res = await fetch(`${API_BASE}/tickets/${id}/`, {
-    method: 'PATCH',
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(datos),
   })
