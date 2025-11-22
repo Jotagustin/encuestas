@@ -47,9 +47,8 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
         </div>
       </div>
 
-      {/* Área de respuesta */}
       {!editando && pregunta.respuesta ? (
-        // Modo visualización
+
         <div>
           <div className="mb-3">
             <div className="fw-bold mb-2">Respuesta:</div>
@@ -63,7 +62,7 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
           </button>
         </div>
       ) : (
-        // Modo edición
+
         <div>
           <label className="form-label fw-bold">Respuesta:</label>
           <textarea

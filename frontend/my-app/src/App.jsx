@@ -11,7 +11,7 @@ function App() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
-  // Cargar preguntas al inicio
+
   useEffect(() => {
     cargarPreguntas()
   }, [])
@@ -77,9 +77,8 @@ function App() {
           </div>
         </div>
 
-        {/* Fila inferior: Respuestas (izquierda) y Preguntas (derecha) */}
+
         <div className="row g-4">
-          {/* Columna IZQUIERDA: Respuestas */}
           <div className="col-12 col-lg-6">
             <div className="card shadow-sm h-100">
               <div className="card-body">
@@ -96,7 +95,6 @@ function App() {
             </div>
           </div>
 
-          {/* Columna DERECHA: Preguntas Recientes */}
           <div className="col-12 col-lg-6">
             <div className="card shadow-sm h-100">
               <div className="card-body">

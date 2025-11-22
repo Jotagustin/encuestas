@@ -4,12 +4,10 @@ from django.utils import timezone
 
 
 def hoy():
-    """Devuelve la fecha local actual (date), usable como default en DateField."""
     return timezone.localdate()
 
 
 def ahora():
-    """Devuelve la hora local actual (time), usable como default en TimeField."""
     return timezone.localtime().time()
 
 

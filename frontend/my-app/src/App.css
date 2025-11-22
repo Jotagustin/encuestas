@@ -27,7 +27,7 @@ body {
   padding: 0 2rem;
 }
 
-/* Tarjetas */
+
 .card {
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -37,7 +37,7 @@ body {
   padding: 1.5rem;
 }
 
-/* Lista de preguntas */
+
 .lista-preguntas {
   max-height: 600px;
   overflow-y: auto;
@@ -51,14 +51,15 @@ body {
   border: 2px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
   font-size: 1.05rem;
 }
 
 .pregunta-item:hover {
   border-color: var(--primary);
-  transform: translateX(2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #e7f1ff;
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
+  transform: scale(1.012);
 }
 
 .pregunta-item.seleccionada {
@@ -67,7 +68,7 @@ body {
   box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
 }
 
-/* Formularios */
+
 .form-control,
 .form-select {
   border-radius: 6px;
@@ -84,7 +85,6 @@ textarea.form-control {
   resize: vertical;
 }
 
-/* Botones */
 .btn {
   border-radius: 6px;
   padding: 0.5rem 1rem;
@@ -102,18 +102,17 @@ textarea.form-control {
   border-color: #0a58ca;
 }
 
-/* Badges */
 .badge {
   padding: 0.35em 0.65em;
   font-weight: 500;
 }
 
-/* Sombras */
+
 .shadow-sm {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Scrollbar personalizado */
+
 .lista-preguntas::-webkit-scrollbar {
   width: 8px;
 }
@@ -132,7 +131,7 @@ textarea.form-control {
   background: #a8a8a8;
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .app-container {
     padding-bottom: 1rem;

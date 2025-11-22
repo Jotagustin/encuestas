@@ -25,10 +25,9 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
   if (!preguntas.length) return <p>Aún no hay preguntas.</p>;
 
   return (
-    <ul className="list-group">
+    <div className="lista-preguntas">
       {preguntas.map((t) => (
-        <li key={t.id} className="list-group-item d-flex justify-content-between align-items-center">
-          
+        <div key={t.id} className="pregunta-item d-flex justify-content-between align-items-center">
           <div style={{ cursor: 'pointer', flex: 1 }} onClick={() => onSeleccionar && onSeleccionar(t)}>
             <div className="fw-bold">{t.pregunta}</div>
             <div className="small text-muted">
@@ -37,24 +36,27 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
           </div>
 
           <div className="d-flex align-items-center gap-2">
-            
             <div className="me-2">
               {t.respuesta ? 
                 <span className="badge bg-success">Respondida</span> : 
                 <span className="badge bg-secondary">Abierta</span>
               }
             </div>
-
             <button
-                className="btn btn-sm btn-danger"
-                onClick={(e) => eliminar(t.id, e)}
+              className="btn btn-sm btn-warning"
+              onClick={(e) => { e.stopPropagation(); onSeleccionar && onSeleccionar(t); }}
             >
-                Eliminar
+              Editar
             </button>
-
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={(e) => eliminar(t.id, e)}
+            >
+              Eliminar
+            </button>
           </div>
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
