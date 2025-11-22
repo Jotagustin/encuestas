@@ -1,43 +1,95 @@
 import { useState, useEffect } from 'react'
 
 export default function ResponsesPanel({ pregunta, onGuardar }) {
-  const [texto, setTexto] = useState(pregunta.respuesta || '')
+  const [respuesta, setRespuesta] = useState('')
   const [editando, setEditando] = useState(false)
   const [guardando, setGuardando] = useState(false)
 
   useEffect(() => {
-    setTexto(pregunta.respuesta || '')
-    setEditando(false)
+    setRespuesta(pregunta.respuesta || '')
+    setEditando(!pregunta.respuesta)
   }, [pregunta])
 
   async function guardar() {
-    if (!onGuardar) return
-    setGuardando(true)
-    try {
-      await onGuardar(pregunta.id, { respuesta: texto, estado: 'respondido' })
-      setEditando(false)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setGuardando(false)
+    if (!respuesta.trim()) {
+      alert('La respuesta no puede estar vacía')
+      return
     }
+
+    setGuardando(true)
+    const resultado = await onGuardar(pregunta.id, {
+      respuesta: respuesta.trim(),
+      estado: 'respondido'
+    })
+    setGuardando(false)
+
+    if (resultado.ok) {
+      setEditando(false)
+    } else {
+      alert('Error al guardar la respuesta')
+    }
+  }
+
+  function cancelar() {
+    setRespuesta(pregunta.respuesta || '')
+    setEditando(false)
   }
 
   return (
     <div>
-      {pregunta.respuesta && !editando ? (
+      {/* Detalles de la pregunta */}
+      <div className="mb-3 p-3 bg-light rounded">
+        <div className="fw-bold mb-2">Pregunta:</div>
+        <div className="mb-2">{pregunta.pregunta}</div>
+        <div className="small text-muted">
+          Por: {pregunta.usuario}
+          {pregunta.empresa && ` (${pregunta.empresa})`}
+        </div>
+      </div>
+
+      {/* Área de respuesta */}
+      {!editando && pregunta.respuesta ? (
+        // Modo visualización
         <div>
-          <div className="mb-2">{pregunta.respuesta}</div>
-          <div>
-            <button className="btn btn-outline-secondary btn-sm" onClick={() => setEditando(true)}>Editar respuesta</button>
+          <div className="mb-3">
+            <div className="fw-bold mb-2">Respuesta:</div>
+            <div className="p-3 bg-light rounded">{pregunta.respuesta}</div>
           </div>
+          <button 
+            className="btn btn-outline-primary btn-sm" 
+            onClick={() => setEditando(true)}
+          >
+            Modificar Respuesta
+          </button>
         </div>
       ) : (
+        // Modo edición
         <div>
-          <textarea className="form-control mb-2" value={texto} onChange={(e) => setTexto(e.target.value)} style={{ minHeight: 120 }} />
-          <div>
-            <button className="btn btn-primary btn-sm" onClick={guardar} disabled={guardando}>{guardando ? 'Guardando…' : 'Guardar'}</button>
-            <button className="btn btn-secondary btn-sm ms-2" onClick={() => { setEditando(false); setTexto(pregunta.respuesta || '') }}>Cancelar</button>
+          <label className="form-label fw-bold">Respuesta:</label>
+          <textarea
+            className="form-control mb-2"
+            value={respuesta}
+            onChange={(e) => setRespuesta(e.target.value)}
+            placeholder="Escribe la respuesta aquí..."
+            rows="5"
+          />
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-primary"
+              onClick={guardar}
+              disabled={guardando}
+            >
+              {guardando ? 'Guardando...' : 'Guardar Respuesta'}
+            </button>
+            {pregunta.respuesta && (
+              <button
+                className="btn btn-secondary"
+                onClick={cancelar}
+                disabled={guardando}
+              >
+                Cancelar
+              </button>
+            )}
           </div>
         </div>
       )}

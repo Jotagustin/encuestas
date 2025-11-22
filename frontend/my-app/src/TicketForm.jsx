@@ -1,70 +1,105 @@
 import { useState } from 'react'
 
 export default function TicketForm({ onCrear }) {
-  const [usuario, setUsuario] = useState('')
-  const [pregunta, setPregunta] = useState('')
-  const [empresa, setEmpresa] = useState('')
-  const [categoria, setCategoria] = useState('general')
-  const [submitting, setSubmitting] = useState(false)
-  const [msg, setMsg] = useState(null)
+  const [formulario, setFormulario] = useState({
+    usuario: '',
+    empresa: '',
+    categoria: 'General',
+    pregunta: ''
+  })
+  const [enviando, setEnviando] = useState(false)
 
-  async function handleSubmit(e) {
+  function manejarCambio(e) {
+    const { name, value } = e.target
+    setFormulario({ ...formulario, [name]: value })
+  }
+
+  async function manejarEnvio(e) {
     e.preventDefault()
-    setMsg(null)
-    setSubmitting(true)
-    const datos = { usuario, pregunta, empresa, categoria }
-    try {
-      const res = await onCrear(datos)
-      if (res && res.ok) {
-        setUsuario('')
-        setPregunta('')
-        setEmpresa('')
-        setCategoria('general')
-        setMsg('Enviado correctamente')
-      } else {
-        setMsg('No se pudo enviar la pregunta')
-      }
-    } catch (e) {
-      console.error(e)
-      setMsg('No se pudo enviar la pregunta')
-    } finally {
-      setSubmitting(false)
-      setTimeout(() => setMsg(null), 2500)
+    
+    if (!formulario.usuario || !formulario.pregunta) {
+      alert('Por favor completa los campos requeridos')
+      return
+    }
+
+    setEnviando(true)
+    const resultado = await onCrear(formulario)
+    setEnviando(false)
+
+    if (resultado.ok) {
+      setFormulario({
+        usuario: '',
+        empresa: '',
+        categoria: 'General',
+        pregunta: ''
+      })
+    } else {
+      alert('Error al enviar la pregunta')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="ticket-form">
+    <form onSubmit={manejarEnvio}>
       <div className="mb-3">
-        <label className="form-label">Nombre</label>
-        <input className="form-control" value={usuario} onChange={(e) => setUsuario(e.target.value)} required placeholder="Tu nombre" />
+        <label className="form-label">Nombre <span className="text-danger">*</span></label>
+        <input
+          type="text"
+          className="form-control"
+          name="usuario"
+          value={formulario.usuario}
+          onChange={manejarCambio}
+          placeholder="Tu nombre"
+          required
+        />
       </div>
 
       <div className="mb-3">
         <label className="form-label">Empresa (opcional)</label>
-        <input className="form-control" value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Nombre de la empresa" />
+        <input
+          type="text"
+          className="form-control"
+          name="empresa"
+          value={formulario.empresa}
+          onChange={manejarCambio}
+          placeholder="Nombre de la empresa"
+        />
       </div>
 
       <div className="mb-3">
         <label className="form-label">Categoría</label>
-        <select className="form-select" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-          <option value="general">General</option>
-          <option value="soporte">Soporte</option>
-          <option value="facturacion">Facturación</option>
+        <select
+          className="form-select"
+          name="categoria"
+          value={formulario.categoria}
+          onChange={manejarCambio}
+        >
+          <option value="General">General</option>
+          <option value="Soporte">Soporte</option>
+          <option value="Ventas">Ventas</option>
+          <option value="Técnico">Técnico</option>
         </select>
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Pregunta</label>
-        <textarea className="form-control" value={pregunta} onChange={(e) => setPregunta(e.target.value)} required placeholder="Escribe tu pregunta aquí" />
+        <label className="form-label">Pregunta <span className="text-danger">*</span></label>
+        <textarea
+          className="form-control"
+          name="pregunta"
+          value={formulario.pregunta}
+          onChange={manejarCambio}
+          placeholder="Escribe tu pregunta aquí"
+          rows="4"
+          required
+        />
       </div>
 
-      <div className="d-flex align-items-center gap-2">
-        <button className="btn btn-primary" type="submit" disabled={submitting}>
-          {submitting ? 'Enviando…' : 'Enviar pregunta'}
-        </button>
-        {msg && <div className="text-success small">{msg}</div>}
-      </div>
+      <button 
+        type="submit" 
+        className="btn btn-primary w-100"
+        disabled={enviando}
+      >
+        {enviando ? 'Enviando...' : 'Enviar Pregunta'}
+      </button>
     </form>
   )
 }
