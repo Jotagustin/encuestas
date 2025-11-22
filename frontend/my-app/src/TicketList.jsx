@@ -28,7 +28,7 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
     <div className="lista-preguntas">
       {preguntas.map((t) => (
         <div key={t.id} className="pregunta-item d-flex justify-content-between align-items-center">
-          <div style={{ cursor: 'pointer', flex: 1 }} onClick={() => onSeleccionar && onSeleccionar(t)}>
+          <div style={{ flex: 1 }}>
             <div className="fw-bold">{t.pregunta}</div>
             <div className="small text-muted">
                 {t.usuario} {t.empresa ? `— ${t.empresa}` : ''}
@@ -44,7 +44,7 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
             </div>
             <button
               className="btn btn-sm btn-warning"
-              onClick={(e) => { e.stopPropagation(); onSeleccionar && onSeleccionar(t); }}
+              onClick={(e) => { e.stopPropagation(); onSeleccionar && onSeleccionar(t, true); }}
             >
               Editar
             </button>

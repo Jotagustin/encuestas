@@ -112,10 +112,12 @@ function App() {
     }
   }
 
-  function seleccionarPregunta(pregunta) {
+  function seleccionarPregunta(pregunta, abrirModal = false) {
     setSeleccionada(pregunta)
-    setPreguntaEditar(pregunta)
-    setEditando(true)
+    if (abrirModal) {
+      setPreguntaEditar(pregunta)
+      setEditando(true)
+    }
   }
 
   async function manejarGuardarEdicion(id, datos) {
