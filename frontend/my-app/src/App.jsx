@@ -58,7 +58,7 @@ function App() {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container ">
       <div className="contenedor-centrado">
         <header className="text-center mb-4 pt-4">
           <h1 className="h2 mb-2">Centro de Preguntas</h1>

@@ -37,7 +37,7 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
 
   return (
     <div>
-      {/* Detalles de la pregunta */}
+
       <div className="mb-3 p-3 bg-light rounded">
         <div className="fw-bold mb-2">Pregunta:</div>
         <div className="mb-2">{pregunta.pregunta}</div>
