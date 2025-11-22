@@ -48,7 +48,7 @@ function EditModal({ pregunta, onClose, onSave }) {
             <label className="form-label">Pregunta</label>
             <textarea name="pregunta" className="form-control" value={form.pregunta || ''} onChange={handleChange} />
           </div>
-          {/* Se ha quitado el campo de respuesta para que no se pueda modificar aquí */}
+
           <div className="d-flex gap-2 mt-3">
             <button type="submit" className="btn btn-primary" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar'}</button>
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
@@ -162,7 +162,11 @@ function App() {
                     onGuardar={manejarGuardarRespuesta} 
                   />
                 ) : (
-                  <p className="text-muted">Selecciona una pregunta para ver/editar su respuesta</p>
+                  <p className="text-muted">
+                    Selecciona una pregunta para ver su respuesta
+                    <br />
+                    <span className="d-block mt-2">Si la pregunta está abierta, aquí podrás responderla.</span>
+                  </p>
                 )}
               </div>
             </div>

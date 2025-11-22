@@ -27,7 +27,7 @@ export default function TicketList({ preguntas = [], onSeleccionar }) {
   return (
     <div className="lista-preguntas">
       {preguntas.map((t) => (
-        <div key={t.id} className="pregunta-item d-flex justify-content-between align-items-center">
+        <div key={t.id} className="pregunta-item d-flex justify-content-between align-items-center" onClick={() => onSeleccionar && onSeleccionar(t)}>
           <div style={{ flex: 1 }}>
             <div className="fw-bold">{t.pregunta}</div>
             <div className="small text-muted">

@@ -7,7 +7,8 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
 
   useEffect(() => {
     setRespuesta(pregunta.respuesta || '')
-    setEditando(!pregunta.respuesta)
+
+    setEditando(!pregunta.respuesta && pregunta.estado === 'abierto')
   }, [pregunta])
 
   async function guardar() {
@@ -15,14 +16,12 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
       alert('La respuesta no puede estar vacía')
       return
     }
-
     setGuardando(true)
     const resultado = await onGuardar(pregunta.id, {
       respuesta: respuesta.trim(),
       estado: 'respondido'
     })
     setGuardando(false)
-
     if (resultado.ok) {
       setEditando(false)
     } else {
@@ -35,34 +34,18 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
     setEditando(false)
   }
 
-  return (
-    <div>
 
-      <div className="mb-3 p-3 bg-light rounded">
-        <div className="fw-bold mb-2">Pregunta:</div>
-        <div className="mb-2">{pregunta.pregunta}</div>
-        <div className="small text-muted">
-          Por: {pregunta.usuario}
-          {pregunta.empresa && ` (${pregunta.empresa})`}
-        </div>
-      </div>
-
-      {!editando && pregunta.respuesta ? (
-
-        <div>
-          <div className="mb-3">
-            <div className="fw-bold mb-2">Respuesta:</div>
-            <div className="p-3 bg-light rounded">{pregunta.respuesta}</div>
+  if (pregunta.estado === 'abierto' && !pregunta.respuesta) {
+    return (
+      <div>
+        <div className="mb-3 p-3 bg-light rounded">
+          <div className="fw-bold mb-2">Pregunta:</div>
+          <div className="mb-2">{pregunta.pregunta}</div>
+          <div className="small text-muted">
+            Por: {pregunta.usuario}
+            {pregunta.empresa && ` (${pregunta.empresa})`}
           </div>
-          <button 
-            className="btn btn-outline-primary btn-sm" 
-            onClick={() => setEditando(true)}
-          >
-            Modificar Respuesta
-          </button>
         </div>
-      ) : (
-
         <div>
           <label className="form-label fw-bold">Respuesta:</label>
           <textarea
@@ -78,20 +61,31 @@ export default function ResponsesPanel({ pregunta, onGuardar }) {
               onClick={guardar}
               disabled={guardando}
             >
-              {guardando ? 'Guardando...' : 'Guardar Respuesta'}
+              {guardando ? 'Guardando.' : 'Guardar Respuesta'}
             </button>
-            {pregunta.respuesta && (
-              <button
-                className="btn btn-secondary"
-                onClick={cancelar}
-                disabled={guardando}
-              >
-                Cancelar
-              </button>
-            )}
           </div>
         </div>
-      )}
+      </div>
+    )
+  }
+
+
+  return (
+    <div>
+      <div className="mb-3 p-3 bg-light rounded">
+        <div className="fw-bold mb-2">Pregunta:</div>
+        <div className="mb-2">{pregunta.pregunta}</div>
+        <div className="small text-muted">
+          Por: {pregunta.usuario}
+          {pregunta.empresa && ` (${pregunta.empresa})`}
+        </div>
+      </div>
+      <div>
+        <div className="mb-3">
+          <div className="fw-bold mb-2">Respuesta:</div>
+          <div className="p-3 bg-light rounded">{pregunta.respuesta}</div>
+        </div>
+      </div>
     </div>
   )
 }
