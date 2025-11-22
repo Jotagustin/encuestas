@@ -86,6 +86,10 @@ main{
 .ticket-item .meta{color:var(--muted);font-size:13px}
 .respuesta{margin-top:8px;color:#065f46;font-size:13px}
 
+/* cuando usamos Bootstrap list-group, limitar la altura para que no empuje el formulario */
+.list-group { max-height: 420px; overflow: auto; }
+.card .card-body textarea.form-control { min-height: 120px; }
+
 .error{color:#b91c1c}
 
 footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
